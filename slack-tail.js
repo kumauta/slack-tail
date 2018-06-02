@@ -21,7 +21,7 @@ rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function () {
 });
 
 rtm.on('message', (event) => {
-  //var channel = rtm.dataStore.getGroupById(event.team);
+  console.log(event);
   var channel = rtm.dataStore.getChannelById(event.channel) || rtm.dataStore.getGroupById(event.channel) || rtm.dataStore.getDMById(event.channel);
   var channelName = "";
   if (channel.name) {
@@ -29,13 +29,13 @@ rtm.on('message', (event) => {
   } else {
     channelName = "@" + rtm.dataStore.getUserById(channel.user).name;
   }
-  channelName = (channelName + "              ").slice(0, 17);
+  channelName = (channelName + " ".repeat(14)).slice(0, 17);
 
   var userName = 'system';
   if (rtm.dataStore.getUserById(event.user)) {
     userName = rtm.dataStore.getUserById(event.user).name;
   }
-  userName = ("@" + userName + "              ").slice(0, 17);
+  userName = ("@" + userName + " ".repeat(14)).slice(0, 17);
 
   var message = 'system operation';
   if (event.text) {
@@ -45,5 +45,11 @@ rtm.on('message', (event) => {
   var date = new Date(Math.floor(event.ts * 1000));
   var dispDate = dateformat(date,'mm/dd HH:MM:ss');
 
-  console.log(dispDate + ' - ' + channelName + ' ' + userName + ': ' + message);
+  var messages = message.split('\n');
+  console.log(dispDate + ' - ' + channelName + ' ' + userName + ': ' + messages[0]);
+  if(messages.length > 1){
+    for(i=1;i < messages.length;i++){
+      console.log(" ".repeat(54) + messages[i]);
+    }
+  }
 })
