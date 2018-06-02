@@ -1,4 +1,5 @@
 var dateformat = require('dateformat');
+var colors = require('colors');
 var RtmClient = require('@slack/client').RtmClient;
 
 var MemoryDataStore = require('@slack/client').MemoryDataStore;
@@ -46,7 +47,7 @@ rtm.on('message', (event) => {
   var dispDate = dateformat(date,'mm/dd HH:MM:ss');
 
   var messages = message.split('\n');
-  console.log(dispDate + ' - ' + channelName + ' ' + userName + ': ' + messages[0]);
+  console.log(dispDate.green + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + messages[0]);
   if(messages.length > 1){
     for(i=1;i < messages.length;i++){
       console.log(" ".repeat(54) + messages[i]);
