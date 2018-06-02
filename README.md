@@ -30,6 +30,8 @@ node slack-tail.js
 ```
 [kumauta/slack-tail]$ node slack-tail.js
 Connected to nogami as kumauta
-6/1 1:24 - #general @kumauta: hoge
-6/1 1:25 - #memo @kumauta: fuga
+06/03 01:48:15 - #kumauta-private  @kumauta         : hoge
+                                                      fuga
+                                                      @kumauta
+06/03 01:48:26 - @kumauta          @kumauta         : this is DM
 ```
