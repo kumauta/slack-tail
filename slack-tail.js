@@ -36,7 +36,6 @@ rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function () {
 });
 
 rtm.on('message', (event) => {
-  console.log(event);
   var channel = rtm.dataStore.getChannelById(event.channel) || rtm.dataStore.getGroupById(event.channel) || rtm.dataStore.getDMById(event.channel);
   var channelName = "";
   if (channel.name) {
