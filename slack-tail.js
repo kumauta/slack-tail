@@ -1,3 +1,14 @@
+function convertUser(message,rtm){
+  var match = message.match(/<@.*>/);
+  if(match != null){
+    var userId = match[0].replace('<@','').replace('>','');
+    var userName = rtm.dataStore.getUserById(userId).name;
+    return message.replace(match[0],('@' + userName).red);
+  }else{
+    return message;
+  }
+}
+
 var dateformat = require('dateformat');
 var colors = require('colors');
 var RtmClient = require('@slack/client').RtmClient;
@@ -47,10 +58,10 @@ rtm.on('message', (event) => {
   var dispDate = dateformat(date,'mm/dd HH:MM:ss');
 
   var messages = message.split('\n');
-  console.log(dispDate.green + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + messages[0]);
+  console.log(dispDate.green + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + convertUser(messages[0],rtm));
   if(messages.length > 1){
     for(i=1;i < messages.length;i++){
-      console.log(" ".repeat(54) + messages[i]);
+      console.log(" ".repeat(54) + convertUser(messages[i],rtm));
     }
   }
 })
