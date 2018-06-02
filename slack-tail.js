@@ -1,3 +1,4 @@
+var dateformat = require('dateformat');
 var RtmClient = require('@slack/client').RtmClient;
 
 var MemoryDataStore = require('@slack/client').MemoryDataStore;
@@ -42,11 +43,7 @@ rtm.on('message', (event) => {
   }
 
   var date = new Date(Math.floor(event.ts * 1000));
-  var month = ("0" + (date.getMonth() + 1)).slice(-2);
-  var day = ("0" + date.getDate()).slice(-2);
-  var hour = ("0" + date.getHours()).slice(-2);
-  var minutes = ("0" + date.getMinutes()).slice(-2);
-  var dispDate = month + '/' + day + ' ' + hour + ':' + minutes;
+  var dispDate = dateformat(date,'mm/dd HH:MM:ss');
 
   console.log(dispDate + ' - ' + channelName + ' ' + userName + ': ' + message);
 })
