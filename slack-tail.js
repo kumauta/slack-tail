@@ -47,11 +47,10 @@ rtm.on('message', (event) => {
   channelName = (channelName + " ".repeat(14)).slice(0, 17);
 
   var userName = 'system';
-  if (event.username) {
-    //bot user
-    userName = event.userName;
-  } else if (event.bot_id) {
-    userName = event.bot_id;
+  if (event.bot_id) {
+    // can't get user info
+    //userName = rtm.dataStore.getUserByBotId(event.bot_id).name;
+    userName = 'bot';
   } else {
     if (rtm.dataStore.getUserById(event.user)) {
       userName = rtm.dataStore.getUserById(event.user).name;
@@ -62,13 +61,15 @@ rtm.on('message', (event) => {
   var message = 'system operation';
   if (event.text) {
     message = event.text;
+  } else {
+    message = event.attachments[0].fallback;
   }
 
   var date = new Date(Math.floor(event.ts * 1000));
   var dispDate = dateformat(date, 'mm/dd HH:MM:ss');
 
   var messages = message.split('\n');
-  console.log(dispDate.green + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + convertUser(messages[0], rtm));
+  console.log(dispDate + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + convertUser(messages[0], rtm));
   if (messages.length > 1) {
     for (i = 1; i < messages.length; i++) {
       console.log(" ".repeat(54) + convertUser(messages[i], rtm));
