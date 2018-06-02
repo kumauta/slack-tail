@@ -1,11 +1,14 @@
 function convertUser(message, rtm) {
-  var match = message.match(/<@.*>/);
-  if (match != null) {
-    var userId = match[0].replace('<@', '').replace('>', '');
-    var userName = rtm.dataStore.getUserById(userId).name;
-    return message.replace(match[0], ('@' + userName).red);
-  } else {
-    return message;
+  var res = message;
+  while (true) {
+    var match = res.match(/<@[a-zA-Z0-9]*>/);
+    if (match != null) {
+      var userId = match[0].replace('<@', '').replace('>', '');
+      var userName = rtm.dataStore.getUserById(userId).name;
+      res = res.replace(match[0], ('@' + userName).red);
+    } else {
+      return res;
+    }
   }
 }
 
