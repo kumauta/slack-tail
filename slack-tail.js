@@ -1,10 +1,10 @@
-function convertUser(message,rtm){
+function convertUser(message, rtm) {
   var match = message.match(/<@.*>/);
-  if(match != null){
-    var userId = match[0].replace('<@','').replace('>','');
+  if (match != null) {
+    var userId = match[0].replace('<@', '').replace('>', '');
     var userName = rtm.dataStore.getUserById(userId).name;
-    return message.replace(match[0],('@' + userName).red);
-  }else{
+    return message.replace(match[0], ('@' + userName).red);
+  } else {
     return message;
   }
 }
@@ -44,8 +44,15 @@ rtm.on('message', (event) => {
   channelName = (channelName + " ".repeat(14)).slice(0, 17);
 
   var userName = 'system';
-  if (rtm.dataStore.getUserById(event.user)) {
-    userName = rtm.dataStore.getUserById(event.user).name;
+  if (event.username) {
+    //bot user
+    userName = event.userName;
+  } else if (event.bot_id) {
+    userName = event.bot_id;
+  } else {
+    if (rtm.dataStore.getUserById(event.user)) {
+      userName = rtm.dataStore.getUserById(event.user).name;
+    }
   }
   userName = ("@" + userName + " ".repeat(14)).slice(0, 17);
 
@@ -55,13 +62,13 @@ rtm.on('message', (event) => {
   }
 
   var date = new Date(Math.floor(event.ts * 1000));
-  var dispDate = dateformat(date,'mm/dd HH:MM:ss');
+  var dispDate = dateformat(date, 'mm/dd HH:MM:ss');
 
   var messages = message.split('\n');
-  console.log(dispDate.green + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + convertUser(messages[0],rtm));
-  if(messages.length > 1){
-    for(i=1;i < messages.length;i++){
-      console.log(" ".repeat(54) + convertUser(messages[i],rtm));
+  console.log(dispDate.green + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + convertUser(messages[0], rtm));
+  if (messages.length > 1) {
+    for (i = 1; i < messages.length; i++) {
+      console.log(" ".repeat(54) + convertUser(messages[i], rtm));
     }
   }
 })
