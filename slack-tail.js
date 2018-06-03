@@ -1,3 +1,10 @@
+function convertId2Name(messages, rtm) {
+  for (i = 0; i < messages.length; i++) {
+    messages[i] = convertUser(messages[i], rtm);
+  }
+  return messages;
+}
+
 function convertUser(message, rtm) {
   var res = message;
   while (true) {
@@ -68,10 +75,11 @@ rtm.on('message', (event) => {
   var dispDate = dateformat(date, 'mm/dd HH:MM:ss');
 
   var messages = message.split('\n');
-  console.log(dispDate + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + convertUser(messages[0], rtm));
+  messages = convertId2Name(messages, rtm);
+  console.log(dispDate + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + messages[0]);
   if (messages.length > 1) {
     for (i = 1; i < messages.length; i++) {
-      console.log(" ".repeat(54) + convertUser(messages[i], rtm));
+      console.log(" ".repeat(50) + messages[i]);
     }
   }
 })
