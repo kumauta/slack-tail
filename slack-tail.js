@@ -1,6 +1,7 @@
 function convertId2Name(messages, rtm) {
   for (i = 0; i < messages.length; i++) {
     messages[i] = convertUser(messages[i], rtm);
+    messages[i] = converChannel(messages[i]);
   }
   return messages;
 }
@@ -17,6 +18,19 @@ function convertUser(message, rtm) {
       } else {
         res = res.replace(match[0], userName);
       }
+    } else {
+      return res;
+    }
+  }
+}
+
+function converChannel(message) {
+  var res = message;
+  while (true) {
+    var match = res.match(/<#[^<]*>/);
+    if (match != null) {
+      var channelName = '#' + match[0].split('|')[1].replace('>', '');
+      res = res.replace(match[0], channelName);
     } else {
       return res;
     }
