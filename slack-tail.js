@@ -55,7 +55,7 @@ rtm.on('message', (event) => {
       userName = rtm.dataStore.getUserById(event.user).name;
     }
   }
-  userName = ("@" + userName + " ".repeat(14)).slice(0, 17);
+  userName = ("@" + userName + " ".repeat(14)).slice(0, 13);
 
   var message = 'system operation';
   if (event.text) {
