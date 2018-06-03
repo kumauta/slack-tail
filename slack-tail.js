@@ -76,6 +76,12 @@ rtm.on('message', (event) => {
       message = event.text;
     } else if (event.attachments) {
       message = event.attachments[0].fallback;
+    } else if (event.previous_message) {
+      if (event.message) {
+        message = "[EDIT]\n" + event.message.text;
+      } else {
+        message = "[DELETE]\n" + event.previous_message.text;
+      }
     }
 
     var date = new Date(Math.floor(event.ts * 1000));
