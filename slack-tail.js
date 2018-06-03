@@ -11,8 +11,12 @@ function convertUser(message, rtm) {
     var match = res.match(/<@[a-zA-Z0-9]*>/);
     if (match != null) {
       var userId = match[0].replace('<@', '').replace('>', '');
-      var userName = rtm.dataStore.getUserById(userId).name;
-      res = res.replace(match[0], ('@' + userName).red);
+      var userName = '@' + rtm.dataStore.getUserById(userId).name;
+      if (userName == loginUserName) {
+        res = res.replace(match[0], userName.red);
+      } else {
+        res = res.replace(match[0], userName);
+      }
     } else {
       return res;
     }
@@ -26,6 +30,7 @@ var RtmClient = require('@slack/client').RtmClient;
 var MemoryDataStore = require('@slack/client').MemoryDataStore;
 var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 var token = process.env.SLACK_API_TOKEN;
+var loginUserName = "";
 
 var rtm = new RtmClient(token, {
   logLevel: 'error',
@@ -38,6 +43,7 @@ rtm.start();
 
 rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function () {
   var user = rtm.dataStore.getUserById(rtm.activeUserId);
+  loginUserName = '@' + user.name;
   var team = rtm.dataStore.getTeamById(rtm.activeTeamId);
   console.log('Connected to ' + team.name + ' as ' + user.name);
 });
