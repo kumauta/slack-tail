@@ -37,6 +37,20 @@ function converChannel(message) {
   }
 }
 
+function isSelectChannel(channelName, channelKeywords) {
+  // Output all messages if there is no keyword
+  if (channelKeywords.length == 0){
+    return true;
+  } else {
+    for(var i = 0; i < channelKeywords.length; i++) {
+      if (channelName.indexOf(channelKeywords[i]) >= 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
 var dateformat = require('dateformat');
 var colors = require('colors');
 var RtmClient = require('@slack/client').RtmClient;
@@ -45,6 +59,11 @@ var MemoryDataStore = require('@slack/client').MemoryDataStore;
 var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 var token = process.env.SLACK_API_TOKEN;
 var loginUserName = "";
+
+var channelKeywords = [];
+if (process.env.CHANNEL_KEYWORDS != null) {
+  channelKeywords = process.env.CHANNEL_KEYWORDS.split("\,");
+}
 
 var rtm = new RtmClient(token, {
   logLevel: 'error',
@@ -103,10 +122,13 @@ rtm.on('message', (event) => {
 
     var messages = message.split('\n');
     messages = convertId2Name(messages, rtm);
-    console.log(dispDate + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + messages[0]);
-    if (messages.length > 1) {
-      for (i = 1; i < messages.length; i++) {
-        console.log(" ".repeat(50) + messages[i]);
+    // Output only direct message and channels that partially match keywords
+    if (channelName.indexOf('@') >= 0 || isSelectChannel(channelName, channelKeywords)) {
+      console.log(dispDate + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + messages[0]);
+      if (messages.length > 1) {
+        for (i = 1; i < messages.length; i++) {
+          console.log(" ".repeat(50) + messages[i]);
+        }
       }
     }
   } catch (e) {
