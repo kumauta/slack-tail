@@ -9,15 +9,12 @@ Install dependencies
 npm install
 ```
 
-Get slack token by below url
+# Environment Variable
 
-* https://api.slack.com/custom-integrations/legacy-tokens
-
-Export env
-
-```
-export SLACK_API_TOKEN=<TOKEN>
-```
+|Environment Variable|Required/Optional|Description|
+|:---:|:---:|:---|
+|SLACK_API_TOKEN|Required|Get slack token by [Legacy tokens](https://api.slack.com/custom-integrations/legacy-tokens).|
+|CHANNEL_KEYWORDS|Optional|Keywords used for patrial match condition. All messages are output if no keyword is specified.<br>Multiple keywords can be specified with a comma separated value.<br>(ex. foo,bar,baz )|
 
 # Run
 
