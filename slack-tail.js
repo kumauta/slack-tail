@@ -39,10 +39,10 @@ function converChannel(message) {
 
 function isSelectChannel(channelName, channelKeywords) {
   // Output all messages if there is no keyword
-  if (channelKeywords.length == 0){
+  if (channelKeywords.length == 0) {
     return true;
   } else {
-    for(var i = 0; i < channelKeywords.length; i++) {
+    for (var i = 0; i < channelKeywords.length; i++) {
       if (channelName.indexOf(channelKeywords[i]) >= 0) {
         return true;
       }
@@ -59,6 +59,9 @@ var MemoryDataStore = require('@slack/client').MemoryDataStore;
 var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 var token = process.env.SLACK_API_TOKEN;
 var loginUserName = "";
+var teamUrl = "";
+var conversationId = "";
+var targetChannel = process.env.TARGET_CHANNEL;
 
 var channelKeywords = [];
 if (process.env.CHANNEL_KEYWORDS != null) {
@@ -79,6 +82,19 @@ rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function () {
   loginUserName = '@' + user.name;
   var team = rtm.dataStore.getTeamById(rtm.activeTeamId);
   console.log('Connected to ' + team.name + ' as ' + user.name);
+
+  teamUrl = 'https://' + team.domain + '.slack.com';
+
+  if (targetChannel) {
+    res = rtm.dataStore.getChannelByName(targetChannel) || rtm.dataStore.getGroupByName(targetChannel) || rtm.dataStore.getDMByName(targetChannel);
+    if (res) {
+      conversationId = res.id;
+      console.log('Target Channel Name: ' + targetChannel + ' ID:' + res.id)
+    } else {
+      console.log('Target Channel Not Found!');
+      process.exit(1);
+    }
+  }
 });
 
 rtm.on('message', (event) => {
@@ -129,6 +145,11 @@ rtm.on('message', (event) => {
         for (i = 1; i < messages.length; i++) {
           console.log(" ".repeat(50) + messages[i]);
         }
+      }
+
+      if ((event.channel != conversationId) && conversationId && (channel.id).indexOf('C') == 0) {
+        messageUrl = teamUrl + '/archives/' + event.channel + '/p' + event.ts.replace('.', '');
+        rtm.sendMessage(messageUrl, conversationId);
       }
     }
   } catch (e) {
