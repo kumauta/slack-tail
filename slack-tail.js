@@ -62,6 +62,7 @@ var loginUserName = "";
 var teamUrl = "";
 var conversationId = "";
 var targetChannel = process.env.TARGET_CHANNEL;
+var messageOnly = process.env.MESSAGE_ONLY;
 
 var channelKeywords = [];
 if (process.env.CHANNEL_KEYWORDS != null) {
@@ -140,10 +141,20 @@ rtm.on('message', (event) => {
     messages = convertId2Name(messages, rtm);
     // Output only direct message and channels that partially match keywords
     if (channelName.indexOf('@') >= 0 || isSelectChannel(channelName, channelKeywords)) {
-      console.log(dispDate + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + messages[0]);
-      if (messages.length > 1) {
-        for (i = 1; i < messages.length; i++) {
-          console.log(" ".repeat(50) + messages[i]);
+
+      if (messageOnly && messageOnly == "true") {
+        console.log(messages[0]);
+        if (messages.length > 1) {
+          for (i = 1; i < messages.length; i++) {
+            console.log(messages[i]);
+          }
+        }
+      } else {
+        console.log(dispDate + ' - ' + channelName.blue + ' ' + userName.cyan + ': ' + messages[0]);
+        if (messages.length > 1) {
+          for (i = 1; i < messages.length; i++) {
+            console.log(" ".repeat(50) + messages[i]);
+          }
         }
       }
 

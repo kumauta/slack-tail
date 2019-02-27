@@ -16,6 +16,7 @@ npm install
 |SLACK_API_TOKEN|Required|Get slack token by [Legacy tokens](https://api.slack.com/custom-integrations/legacy-tokens).|
 |CHANNEL_KEYWORDS|Optional|Keywords used for patrial match condition. All messages are output if no keyword is specified.<br>Multiple keywords can be specified with a comma separated value.<br>(ex. foo,bar,baz )|
 |TARAGET_CHANNEL|Optional|Channel Name which gathering all public channel log|
+|MESSAGE_ONLY|Optional|If set `true`. Output message only |
 
 # Run
 
