@@ -63,6 +63,7 @@ var teamUrl = "";
 var conversationId = "";
 var targetChannel = process.env.TARGET_CHANNEL;
 var messageOnly = process.env.MESSAGE_ONLY;
+var userOnly = process.env.USER_ONLY;
 
 var channelKeywords = [];
 if (process.env.CHANNEL_KEYWORDS != null) {
@@ -117,6 +118,12 @@ rtm.on('message', (event) => {
     } else {
       if (rtm.dataStore.getUserById(event.user)) {
         userName = rtm.dataStore.getUserById(event.user).name;
+      }
+    }
+
+    if (userOnly && userOnly == "true") {
+      if (userName == "system" || userName == "bot") {
+        return;
       }
     }
     userName = ("@" + userName + " ".repeat(14)).slice(0, 13);
