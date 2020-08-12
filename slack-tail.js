@@ -150,10 +150,14 @@ rtm.on('message', (event) => {
     if (channelName.indexOf('@') >= 0 || isSelectChannel(channelName, channelKeywords)) {
 
       if (messageOnly && messageOnly == "true") {
-        console.log(messages[0]);
+        console.log(messages[0].replace(/[-"']/g," "));
         if (messages.length > 1) {
           for (i = 1; i < messages.length; i++) {
-            console.log(messages[i]);
+            console.log(messages[i].replace(/[-"']/g," "));
+            if (i > 3){
+              console.log("長いから割愛");
+              break;
+            }
           }
         }
       } else {
@@ -161,6 +165,10 @@ rtm.on('message', (event) => {
         if (messages.length > 1) {
           for (i = 1; i < messages.length; i++) {
             console.log(" ".repeat(50) + messages[i]);
+            if (i > 3){
+              console.log("長いから割愛");
+              break;
+            }
           }
         }
       }
